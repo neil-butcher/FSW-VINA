@@ -19,6 +19,9 @@
     @include('livewire.surveystudent.components.delete')
     <!-- View Modal -->
     @include('livewire.surveystudent.components.view')
+    @if(config('app.roster_claim') && auth()->user()->can('administrate'))
+        @include('livewire.surveystudent.components.claim-word')
+    @endif
 
 
     <button data-bs-toggle="modal" data-bs-target="#createModal"
@@ -95,6 +98,12 @@
                                 wire:click="initData({{ $model }})"
                                 class="btn btn-outline-info btn-sm">View
                         </button>
+                        @if(config('app.roster_claim') && auth()->user()->can('administrate') && !$model->finished_at)
+                            <button wire:click="prepareClaimWord({{ $model->id }})" data-bs-toggle="modal" data-bs-target="#claimWordModal"
+                                    type="button" class="btn btn-outline-warning btn-sm">
+                                {{ __('Set secret word') }}
+                            </button>
+                        @endif
                         <button data-bs-toggle="modal" data-bs-target="#editModal"
                                 wire:click="initData({{ $model }})"
                                 class="btn btn-outline-primary btn-sm">Edit

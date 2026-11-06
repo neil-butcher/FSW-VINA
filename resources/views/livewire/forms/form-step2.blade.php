@@ -2,6 +2,9 @@
                 :loading="$loading"
                 :json-question="$jsonQuestion">
     <div class="mt-4">
+        @if(config('app.roster_claim'))
+            <p>{{ __('You are answering as :name.', ['name' => session('student-name')]) }}</p>
+        @else
         <div class="form-group set-fade-in">
                 <h6 class="pb-2">{{ $jsonQuestion->question_content }}</h6>
                 <input type="text" wire:model="name" class="form-control style-input"
@@ -15,9 +18,9 @@
                 {!! langDatabase('form.step_two_note') !!}
             </p>
         </div>
+        @endif
     </div>
 </x-layouts.form>
-
 
 
 

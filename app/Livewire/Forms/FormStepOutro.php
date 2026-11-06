@@ -29,6 +29,9 @@ class FormStepOutro extends Component
     {
         $survey = $this->form->getSurvey();
         $student = SurveyStudent::find($this->form->getStudent()->id);
+        if (config('app.roster_claim')) {
+            session()->put('roster-ready-to-finish', true);
+        }
         $this->qualtricsName = $survey->qualtrics_name;
 
         $this->qualtricsLink = 'https://survey.uu.nl/jfe/form/'.$survey->qualtrics_id.'?'.$survey->qualtrics_param.'='.$student->uuid;
@@ -48,6 +51,7 @@ class FormStepOutro extends Component
 
     public function setStudentFinishedSurvey(): void
     {
+        abort_if(config('app.roster_claim'), 403);
         SurveyStudent::where([
             'id' => $this->form->getStudent()->id,
         ])

@@ -78,6 +78,48 @@ surveys and participants. See "Install questionaire" below before changing an
 existing database. A previously selected browser language remains in the
 session; clear the session or choose English to change it.
 
+#### Roster and shared tablets
+
+The standalone local Compose setup enables roster claims. Create the survey
+and code in `/surveytable`, then add every participant under
+`/surveystudenttable`, choosing the same survey for each. An administrator can
+click **Set secret word** beside each participant and enter a five-letter
+word using A-Z. Give each student their word privately; only its password hash
+is stored. Changing the word revokes the previous credential and active
+session. Existing 16-character codes no longer work; set a word for each
+participant before they start or resume.
+
+Each participant enters the survey code, then their roster name and secret
+word. Names must match the roster; words are case-insensitive.
+The roster must be complete before anyone begins the selection questions.
+Students can resume an unfinished questionnaire using the same word; claiming
+it on another device ends the previous session. If interrupted, use **Leave
+and clear this tablet** before handing it over; the word can be used to resume.
+At the end, use **Finish and
+clear this tablet** before handing it to the next student. A completed word
+cannot be reused. If a follow-up Qualtrics survey is configured, its link is
+shown after finishing; complete it before handing over the tablet.
+
+Existing survey participants do not automatically have secret words; set
+them from the roster screen. This mode is enabled with
+`VINA_ROSTER_CLAIM=true`; other installations retain the existing self-entry
+workflow unless explicitly enabled. Some questions also depend on classmates'
+answers, so a complete roster alone does not ensure every such question has
+all the information it needs. Review the questionnaire and study workflow
+before collecting responses.
+
+This development setup listens only on localhost, uses HTTP and is not
+configured for real student data or access from tablets. A production
+deployment needs HTTPS, access controls, protected backups, a reviewed data
+retention schedule, and appropriate privacy approval. In particular, the
+application's anonymization job replaces participant names with UUIDs; do not
+run it until the group has finished using the roster.
+
+Five-letter words are easy to guess, especially if children know one another's
+names. Failed claims are limited per participant and per network address, but
+this is not strong authentication. Choose distinct, non-obvious words, keep
+them private, and supervise the tablets.
+
 Existing local databases need `php artisan migrate --force` after updating
 before setting a password. Do not rerun the seeders on an existing database.
 The local-only migration retains its columns on rollback to avoid deleting

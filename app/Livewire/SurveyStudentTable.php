@@ -6,7 +6,10 @@ use App\Models\SurveyStudent;
 use DateTime;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -44,17 +47,28 @@ class SurveyStudentTable extends Component
 
     public ?SurveyStudent $surveystudent = null;
 
+    public ?int $claimStudentId = null;
+
+    public string $claimWord = '';
+
     //Multiple Selection props
     public array $selectedSurveystudents = [];
 
     public bool $bulkDisabled = true;
 
     //Update & Store Rules
-    protected array $rules =
-        [
-            'name' => 'string',
-            'survey_id' => 'int',
+    protected function rules(): array
+    {
+        return [
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('survey_students', 'name')
+                    ->where('survey_id', $this->survey_id)
+                    ->ignore($this->surveystudent?->id),
+            ],
+            'survey_id' => ['required', 'integer', 'exists:surveys,id'],
         ];
+    }
 
     protected array $messages = [
         //
@@ -88,6 +102,47 @@ class SurveyStudentTable extends Component
             SurveyStudent::create($validatedData);
         });
         $this->refresh('SurveyStudent successfully created!');
+    }
+
+    public function prepareClaimWord(SurveyStudent $student): void
+    {
+        $this->authorize('administrate');
+        abort_unless(config('app.roster_claim'), 404);
+        $this->claimStudentId = $student->id;
+        $this->claimWord = '';
+        $this->resetErrorBag('claimWord');
+    }
+
+    public function saveClaimWord(): void
+    {
+        $this->authorize('administrate');
+        abort_unless(config('app.roster_claim'), 404);
+        $this->validate([
+            'claimStudentId' => ['required', 'integer', 'exists:survey_students,id'],
+            'claimWord' => ['required', 'string', 'regex:/\A[a-zA-Z]{5}\z/'],
+        ]);
+        $student = DB::transaction(function () {
+            $student = SurveyStudent::whereKey($this->claimStudentId)->lockForUpdate()->firstOrFail();
+            if ($student->finished_at !== null) {
+                return null;
+            }
+
+            $student->claim_word_hash = Hash::make(strtolower($this->claimWord));
+            $student->claim_code_hash = null;
+            $student->claim_session_hash = null;
+            $student->save();
+
+            return $student;
+        });
+        if (! $student) {
+            $this->addError('claimWord', __('A completed participant cannot receive a new secret word.'));
+
+            return;
+        }
+
+        RateLimiter::clear('roster-claim:'.hash('sha256', $student->survey_id.':'.mb_strtolower($student->name)));
+        $this->reset(['claimWord', 'claimStudentId']);
+        $this->refresh(__('Secret word saved. Give it privately to the participant.'));
     }
 
     //Get & assign selected post props

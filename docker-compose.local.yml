@@ -14,6 +14,7 @@ services:
       VINA_LOCAL_PASSWORD_LOGIN: "true"
       VINA_DEFAULT_LOCALE: en
       VINA_QUESTION_SET: en
+      VINA_ROSTER_CLAIM: "true"
       VINA_HIDE_ENVIRONMENT_RIBBON: "true"
       DEBUGBAR_ENABLED: "false"
       LOG_CHANNEL: stderr

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\InstallQuestionsController;
 use App\Http\Controllers\SurveyController;
+use App\Http\Controllers\RosterClaimController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('survey');
 });
+
+Route::get('/roster/claim', [RosterClaimController::class, 'show'])->name('roster.claim');
+Route::post('/roster/claim', [RosterClaimController::class, 'claim'])->middleware('throttle:10,1')->name('roster.claim.submit');
+Route::post('/roster/finish', [RosterClaimController::class, 'finish'])->name('roster.finish');
+Route::post('/roster/leave', [RosterClaimController::class, 'leave'])->name('roster.leave');
 
 Route::group(['middleware' => ['auth']], function () {
 

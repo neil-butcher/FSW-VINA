@@ -55,6 +55,16 @@ class FormStep2 extends Component
 
     public function save(): void
     {
+        if (config('app.roster_claim')) {
+            if (! session::has('student-id')) {
+                $this->redirectRoute('roster.claim');
+            } else {
+                $this->dispatch('step-up')->component(StepController::class);
+            }
+
+            return;
+        }
+
         $this->form->addRulesFromOutside($this->rules());
         try {
             $this->validate($this->rules());

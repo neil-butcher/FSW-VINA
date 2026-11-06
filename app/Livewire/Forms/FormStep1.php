@@ -71,7 +71,7 @@ class FormStep1 extends Component
         }
     }
 
-    public function save(): void
+    public function save()
     {
         $this->form->addRulesFromOutside($this->rules());
         try {
@@ -84,6 +84,10 @@ class FormStep1 extends Component
         session::put([
             'survey-id' => $survey->id,
         ]);
+
+        if (config('app.roster_claim')) {
+            return redirect()->route('roster.claim');
+        }
 
         $this->dispatch('step-up')->component(StepController::class);
     }

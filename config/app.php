@@ -50,6 +50,8 @@ return [
 
     'hide_environment_ribbon' => (bool) env('VINA_HIDE_ENVIRONMENT_RIBBON', false),
 
+    'roster_claim' => (bool) env('VINA_ROSTER_CLAIM', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application URL

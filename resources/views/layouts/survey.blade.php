@@ -27,6 +27,23 @@
     @bladedebug('<a href="/reset" class="skip-link">Reset</a>')
     @ribbon()
     <main class="module_container">
+        @if(session('roster-finished'))
+            @if(session('roster-qualtrics-link'))
+                <div class="alert alert-success">{{ __('Continue to the follow-up survey before handing over the tablet.') }}</div>
+                <a class="btn btn-primary" href="{{ session('roster-qualtrics-link') }}">{{ __('Continue to the follow-up survey') }}</a>
+            @else
+                <div class="alert alert-success">{{ __('Finished. This tablet is ready for the next participant.') }}</div>
+            @endif
+        @endif
+        @if(session('roster-left'))
+            <div class="alert alert-success">{{ __('This tablet is ready for the next participant. Your questionnaire can be resumed with your code.') }}</div>
+        @endif
+        @if(config('app.roster_claim') && session('student-id'))
+            <form method="POST" action="{{ route('roster.leave') }}" onsubmit="return confirm('{{ __('Leave this questionnaire and clear this tablet? You can resume using your code.') }}')">
+                @csrf
+                <button class="btn btn-outline-secondary" type="submit">{{ __('Leave and clear this tablet') }}</button>
+            </form>
+        @endif
         @yield('content')
     </main>
 

@@ -24,6 +24,8 @@ class SurveyStudent extends Model
 
     protected $table = 'survey_students';
 
+    protected $hidden = ['claim_code_hash', 'claim_word_hash', 'claim_session_hash'];
+
     protected $casts = [
         'finished_at' => 'datetime',
         'exported_at' => 'datetime',
