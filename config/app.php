@@ -44,6 +44,12 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'default_session_locale' => env('VINA_DEFAULT_LOCALE'),
+
+    'question_set' => env('VINA_QUESTION_SET', 'default'),
+
+    'hide_environment_ribbon' => (bool) env('VINA_HIDE_ENVIRONMENT_RIBBON', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application URL

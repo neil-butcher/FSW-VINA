@@ -1,0 +1,10 @@
+.git
+.vina-local
+.env
+.env.*
+vendor
+node_modules
+storage
+bootstrap/cache/*.php
+docker/auth.json
+docker/keys.env

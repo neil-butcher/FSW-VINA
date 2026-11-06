@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(SurveySeeder::class);
-        $this->call(QuestionSeeder::class);
+        $this->callWith(QuestionSeeder::class, ['questionsSet' => config('app.question_set')]);
         $this->call(SettingSeeder::class);
         // For convenience:
 

@@ -12,6 +12,99 @@ the appteam or access the repository on GitHub (htsappteam@uu.nl).
 
 ## Development
 
+### Standalone local Docker setup
+
+This option runs VINA and MariaDB on localhost without the shared development
+network or reverse proxy. It builds the frontend assets and expects
+`HTS-AppTeam-LaravelBase` to be checked out alongside this repository:
+
+```
+reviews/
+  FSW-VINA/
+  HTS-AppTeam-LaravelBase/
+```
+
+Docker Desktop and an internet connection to download the public Composer
+dependencies are required. The base package comes from the adjacent checkout,
+which may differ from the version recorded in `composer.lock`. Its source is
+mounted read-only into the container.
+
+From the VINA directory, create a local environment file only if you do not
+already have one, then build and start the services:
+
+```powershell
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+docker compose -p vina-dev -f docker-compose.local.yml up -d --build
+docker compose -p vina-dev -f docker-compose.local.yml exec web php artisan config:clear
+docker compose -p vina-dev -f docker-compose.local.yml exec web php artisan package:discover
+```
+
+For a **new** environment file with an empty `APP_KEY`, generate a key once:
+
+```powershell
+docker compose -p vina-dev -f docker-compose.local.yml exec web php artisan key:generate
+```
+
+Do not regenerate an existing key: it invalidates encrypted application data.
+On the first setup of the new database, run:
+
+```powershell
+docker compose -p vina-dev -f docker-compose.local.yml exec web php artisan migrate --force
+docker compose -p vina-dev -f docker-compose.local.yml exec web php artisan db:seed --force
+```
+
+Package discovery must precede migration: the base package supplies additional
+user-table migrations needed by the seeders. Seed only once; it is not
+idempotent. The database is stored in a Docker volume and is not reset when
+the containers restart.
+
+Local Compose enables password login instead of OIDC. Set a password for the
+seeded administrator (the command prompts without displaying the password):
+
+```powershell
+docker compose -p vina-dev -f docker-compose.local.yml exec web php artisan local:set-password daan@test.nl
+```
+
+Open http://localhost:8080/auth/local/login and sign in with `daan@test.nl`
+and the password you chose. To generate a random password instead, add
+`--generate`; it is shown once. The command can set a password only for an
+existing user, and only when local password login is enabled. Registration and
+password reset by email are disabled in this local setup.
+
+Local Compose defaults to English, hides the environment ribbon and debug
+output, and seeds the English questionnaire on a new database. Existing
+questionnaires are not replaced: switching question sets can require removing
+surveys and participants. See "Install questionaire" below before changing an
+existing database. A previously selected browser language remains in the
+session; clear the session or choose English to change it.
+
+Existing local databases need `php artisan migrate --force` after updating
+before setting a password. Do not rerun the seeders on an existing database.
+The local-only migration retains its columns on rollback to avoid deleting
+credentials. Other environments retain their original OIDC configuration.
+
+Frontend assets are rebuilt with the image. After changing frontend source,
+run `docker compose -p vina-dev -f docker-compose.local.yml up -d --build`
+to refresh the assets.
+
+Composer dependencies are stored in the `vina-dev_vendor` volume. After
+changing `composer.lock`, rebuild the image and recreate that volume so it
+receives the new dependencies (this does not delete the database):
+
+```powershell
+docker compose -p vina-dev -f docker-compose.local.yml down
+docker volume rm vina-dev_vendor
+docker compose -p vina-dev -f docker-compose.local.yml up -d --build
+docker compose -p vina-dev -f docker-compose.local.yml exec web php artisan package:discover
+docker compose -p vina-dev -f docker-compose.local.yml exec web php artisan migrate --force
+```
+
+To stop the services without deleting the database:
+
+```powershell
+docker compose -p vina-dev -f docker-compose.local.yml down
+```
+
 ### Prerequisites
 
 - In order to run (or build) a Docker container on your local machine you will need to install the 'Docker-for-Desktop'

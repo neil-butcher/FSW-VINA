@@ -1,5 +1,7 @@
 <?php
 
+$localPasswordLogin = env('APP_ENV') === 'local' && env('VINA_LOCAL_PASSWORD_LOGIN', false);
+
 return [
     /*
      * Enable logging, useful for debugging
@@ -9,9 +11,9 @@ return [
     /*
      * saml, oidc or local
      */
-    'login_type' => [
-        'oidc',
-    ],
+    'local_password_login' => $localPasswordLogin,
+
+    'login_type' => $localPasswordLogin ? ['local'] : ['oidc'],
 
     /*
      * The field used in the database to identify a user
@@ -218,7 +220,7 @@ return [
             'login' => true,
             'logout' => true,
             'register' => false,
-            'reset' => true,   // for resetting passwords
+            'reset' => !$localPasswordLogin,   // for resetting passwords
             // TODO: Confirm and verify is not finished jet.
             'confirm' => false,  // for additional password confirmations
             'verify' => false,  // for email verification

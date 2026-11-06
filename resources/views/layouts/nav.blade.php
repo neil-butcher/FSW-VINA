@@ -14,7 +14,7 @@
                 </small>
             @endif
             @if(Auth::guest())
-                <a class="nav-link" href="{{ route('auth.oidc.login') }}">
+                <a class="nav-link" href="{{ route(config('hts-appteam.local_password_login') ? 'auth.local.login' : 'auth.oidc.login') }}">
                     <i class="fas fa-sign-in-alt"></i> {{langDatabase('nav.login')}}
                 </a>
             @endif
@@ -76,12 +76,14 @@
                         <i class="fa-xl fas fa-user-circle text-light"></i>
                 </a>
                 <menu class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAvatar">
-                    <li>
-                        <a class="dropdown-item" href="{{ route('auth.oidc.permissions') }}">
-                            <i class="fas fa-list-ul"></i> {{langDatabase('nav.permissions')}}
-                        </a>
-                    </li>
-                    <li><hr class="dropdown-divider" /></li>
+                    @if(!config('hts-appteam.local_password_login'))
+                        <li>
+                            <a class="dropdown-item" href="{{ route('auth.oidc.permissions') }}">
+                                <i class="fas fa-list-ul"></i> {{langDatabase('nav.permissions')}}
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider" /></li>
+                    @endif
                     <li>
                         <a class="dropdown-item" href="{{ route('auth.logout') }}">
                             <i class="fas fa-sign-out-alt"></i> {{langDatabase('nav.signout')}}

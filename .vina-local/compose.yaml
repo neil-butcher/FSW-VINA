@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    env_file: database.env
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+      start_period: 15s
+  web:
+    image: vina:local-runtime
+    build:
+      context: ..
+      dockerfile: docker/runtime.dockerfile
+    restart: unless-stopped
+    env_file: runtime.env
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - storage:/var/www/html/storage
+    depends_on:
+      db:
+        condition: service_healthy
+  scheduler:
+    image: vina:local-runtime
+    restart: unless-stopped
+    env_file: runtime.env
+    command: ["php", "artisan", "schedule:work"]
+    volumes:
+      - storage:/var/www/html/storage
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  database:
+  storage:
