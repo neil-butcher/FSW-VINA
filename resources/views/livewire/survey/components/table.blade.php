@@ -27,6 +27,9 @@
     <button data-bs-toggle="modal" data-bs-target="#createModal"
             class="btn btn-outline-success btn-outline-md mb-2">Create New Survey
     </button>
+    @if(config('app.roster_claim') && auth()->user()->can('administrate'))
+        <a href="{{ route('survey.import') }}" class="btn btn-outline-primary mb-2">{{ __('Import survey and roster') }}</a>
+    @endif
 
     <div class="row">
         <div class="col-md-3">

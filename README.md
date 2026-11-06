@@ -89,6 +89,22 @@ is stored. Changing the word revokes the previous credential and active
 session. Existing 16-character codes no longer work; set a word for each
 participant before they start or resume.
 
+Administrators can instead select **Import survey and roster** on the survey
+page and upload a UTF-8 CSV. Download the example on that page or use
+[survey-roster.csv](examples/survey-roster.csv). The required columns, in
+order: put only the new survey code on the first line, leave a blank line,
+then add one `name,secret_word` row per participant, without a header. The
+previous labelled formats are still accepted.
+Include between 1 and 500 participants, with unique names and
+five-letter words containing only A-Z. Quote names containing commas. The
+file must be at most 256 KB. A failed import creates nothing, and existing
+surveys cannot be overwritten.
+
+The import creates a survey and roster for the questionnaire **already
+installed** in VINA; it does not import or change the questions in
+`database/en_questions.json`. The CSV contains names and plaintext words:
+store and distribute it securely, then delete it when it is no longer needed.
+
 Each participant enters the survey code, then their roster name and secret
 word. Names must match the roster; words are case-insensitive.
 The roster must be complete before anyone begins the selection questions.

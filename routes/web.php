@@ -3,6 +3,7 @@
 use App\Http\Controllers\InstallQuestionsController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\RosterClaimController;
+use App\Http\Controllers\SurveyRosterImportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,6 +42,9 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::middleware(['can:administrate'])->group(function () {
+        Route::get('/survey/import', [SurveyRosterImportController::class, 'show'])->name('survey.import');
+        Route::get('/survey/import/example', [SurveyRosterImportController::class, 'example'])->name('survey.import.example');
+        Route::post('/survey/import', [SurveyRosterImportController::class, 'store'])->name('survey.import.store');
         Route::get('/roletable', function () {
             return view('livewire.role.index');
         });
