@@ -37,12 +37,15 @@ class FormStep2 extends Component
         ];
     }
 
-    protected $messages = [
-        'name.unique' => 'Iemand anders in je klas heeft deze naam al ingevuld. Voeg de eerste letter van je achternaam toe.',
-        'name.required' => 'Voornaam is verplicht',
-        'name.min' => 'Je naam moet minimaal 1 karakter zijn.',
-        'name.alpha_num' => 'Je kunt alleen letters en cijfers invoeren.',
-    ];
+    protected function messages(): array
+    {
+        return [
+            'name.unique' => langDatabase('form.validation.name_unique'),
+            'name.required' => langDatabase('form.validation.name_required'),
+            'name.min' => langDatabase('form.validation.name_min'),
+            'name.string' => langDatabase('form.validation.name_string'),
+        ];
+    }
 
     public $setPage = true;
 

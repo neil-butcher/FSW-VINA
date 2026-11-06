@@ -14,7 +14,7 @@
                 </small>
             @endif
             @if(Auth::guest())
-                <a class="nav-link" href="{{ route('auth.oidc.login') }}">
+                <a class="nav-link" href="{{ route('login') }}">
                     <i class="fas fa-sign-in-alt"></i> {{langDatabase('nav.login')}}
                 </a>
             @endif
@@ -77,15 +77,12 @@
                 </a>
                 <menu class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAvatar">
                     <li>
-                        <a class="dropdown-item" href="{{ route('auth.oidc.permissions') }}">
-                            <i class="fas fa-list-ul"></i> {{langDatabase('nav.permissions')}}
-                        </a>
-                    </li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li>
-                        <a class="dropdown-item" href="{{ route('auth.logout') }}">
-                            <i class="fas fa-sign-out-alt"></i> {{langDatabase('nav.signout')}}
-                        </a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i> {{langDatabase('nav.signout')}}
+                            </button>
+                        </form>
                     </li>
                 </menu>
             </div>

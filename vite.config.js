@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import {viteStaticCopy} from "vite-plugin-static-copy";
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
     plugins: [
         laravel({
             input: [
@@ -36,10 +36,10 @@ export default defineConfig({
     },
     server: {
         cors: true,
-        https: {
+        https: command === 'serve' ? {
             key: fs.readFileSync('docker/certificates/apache/docker.dev.key'),
             cert: fs.readFileSync('docker/certificates/apache/docker.dev.crt'),
-        },
+        } : undefined,
         host: true,
         port: 7038,
         hmr: {
@@ -48,4 +48,4 @@ export default defineConfig({
         },
     },
 
-});
+}));

@@ -14,9 +14,8 @@ class TranslationsTableSeeder extends Seeder
     public function run()
     {
 
-        \DB::table('translations')->delete();
-
-        \DB::table('translations')->insert([
+        // Setup can run repeatedly without replacing edited translations.
+        \DB::table('translations')->insertOrIgnore([
             0 => [
                 'slug' => 'form.step_intro',
                 'nl' => '<h5>Hartelijk welkom bij de vragenlijst!</h5><p class="lh-sm mt-3">Het invullen van deze vragenlijst duurt ongeveer 20 minuten.</p><p class="lh-sm">In de informatiebrief kon je lezen waar het onderzoek over gaat, dat jouw antwoorden anoniem zijn en op een beveiligde plek worden opgeslagen. Als je een vraag liever niet invult mag je deze overslaan. Je mag ook op elk moment stoppen met de vragenlijst.</p><p class="lh-sm">Heb je een vraag of opmerking over het onderzoek? Dan kun je de onderzoekers mailen: zieelkaar@uu.nl.</p><p class="mb-1"><b>Door hieronder op de pijl te klikken, ga je akkoord met het volgende:</b></p><div class="px-2"><ul><li><span>Ik heb informatie over het onderzoek gehad.</span></li><li><span>Ik heb de schriftelijke informatie gelezen en begrepen.</span></li><li><span>Ik heb vragen kunnen stellen en ik heb antwoord gekregen. Ik heb genoeg tijd gehad om te bedenken of ik mee wilde doen en mijn deelname is vrijwillig.</span></li><li><span>Ik weet dat er gegevens over mij worden verzameld.</span></li><li><span>Ik ga akkoord met dat mijn antwoord op de vraag bij welke cultuur ik hoor, wordt gebruikt in de vragenlijst van mijn klasgenoten.</span></li><li><span>Ik ga ermee akkoord dat die gegevens worden gebruikt wetenschappelijk onderzoek, zoals is uitgelegd in de informatiebrief.</span></li><li><span>Ik ga ermee akkoord dat andere onderzoekers mijn anonieme gegevens gebruiken voor hun eigen onderzoek naar (de kijk van mensen op) culturele achtergrond en wat de gevolgen hiervan zijn.</span></li></ul></div>',
@@ -24,8 +23,8 @@ class TranslationsTableSeeder extends Seeder
             ],
             1 => [
                 'slug' => 'form.step_seven_country_of_origin',
-                'nl' => 'step_seven_country_of_origin',
-                'en' => 'step_seven_country_of_origin',
+                'nl' => 'Wat is je culturele achtergrond?',
+                'en' => 'What is your cultural background?',
             ],
             2 => [
                 'slug' => 'form.step_two',
@@ -40,12 +39,12 @@ class TranslationsTableSeeder extends Seeder
             4 => [
                 'slug' => 'nav.signed_in_as',
                 'nl' => 'signed_in_as',
-                'en' => 'signed_in_as',
+                'en' => 'Signed in as',
             ],
             5 => [
                 'slug' => 'nav.role_description',
                 'nl' => 'role_description',
-                'en' => 'role_description',
+                'en' => 'Role',
             ],
             6 => [
                 'slug' => 'user.admin',
@@ -105,7 +104,7 @@ class TranslationsTableSeeder extends Seeder
             17 => [
                 'slug' => 'nav.csv-export-list',
                 'nl' => 'csv-export-list',
-                'en' => 'csv-export-list',
+                'en' => 'CSV exports',
             ],
             18 => [
                 'slug' => 'nav.permissions',
@@ -115,7 +114,7 @@ class TranslationsTableSeeder extends Seeder
             19 => [
                 'slug' => 'nav.signout',
                 'nl' => 'signout',
-                'en' => 'signout',
+                'en' => 'Sign out',
             ],
             20 => [
                 'slug' => 'lang.en',
@@ -151,6 +150,21 @@ class TranslationsTableSeeder extends Seeder
                 'slug' => 'app.install_question_set_instruction',
                 'nl' => 'Je kunt alleen een vragenset installeren als er geen survey meer in het systeem staan. Deze moet je eerst verwijderen. Let op! als je surveys verwijderd verwijder je ook alle participant data.',
                 'en' => 'You can only install a question set when all surveys are removed. So remove them before you install a question set. When you remove a survey, all participants data will be removed as well.',
+            ],
+            [
+                'slug' => 'app.select_questions_set',
+                'nl' => 'Kies een vragenlijst',
+                'en' => 'Choose a questionnaire',
+            ],
+            [
+                'slug' => 'roles.user',
+                'nl' => 'Gebruiker',
+                'en' => 'User',
+            ],
+            [
+                'slug' => 'roles.administrator',
+                'nl' => 'Beheerder',
+                'en' => 'Administrator',
             ],
         ]);
 

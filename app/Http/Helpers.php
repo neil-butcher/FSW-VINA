@@ -169,7 +169,7 @@ if (! function_exists('langDatabase')) {
             return $key;
         }
 
-        $locale = \App\Models\Setting::where('key', 'locale')->first()->value;
+        $locale = \App\Models\Setting::where('key', 'locale')->value('value');
         if ($locale) {
             app()->setLocale($locale);
         }

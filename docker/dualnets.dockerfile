@@ -65,9 +65,6 @@ COPY ./docker/httpd.conf /etc/apache2/sites-enabled/000-default.conf
 # copy webapp files
 COPY ./ /var/www
 
-# copy github token
-COPY ./docker/auth.json /root/.composer/auth.json
-
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 

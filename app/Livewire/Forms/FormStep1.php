@@ -25,31 +25,28 @@ class FormStep1 extends Component
     ];
 
     protected $rules = [
-        'surveyCode' => 'required|min:2',
+        'surveyCode' => 'required|min:3|string',
     ];
 
-    protected $messages = [
-        'surveyCode.required' => 'De klas code is verplicht.',
-        'surveyCode.min' => 'De :attribute moet minimaal 2 karakters zijn.',
-    ];
+    protected function messages(): array
+    {
+        return [
+            'surveyCode.required' => langDatabase('form.validation.code_required'),
+            'surveyCode.min' => langDatabase('form.validation.code_min'),
+            'surveyCode.string' => langDatabase('form.validation.code_string'),
+        ];
+    }
 
     public function rules(): array
     {
-        $this->messages['surveyCode.exists'] = 'Code bestaat niet.';
-
         return [
             'surveyCode' => [
                 'required',
                 'min:3',
                 'string',
                 function (string $attribute, mixed $value, Closure $fail) {
-                    if (empty($value)) {
-                        $this->firstRequired = false;
-                        $fail($this->messages['surveyCode.exists']);
-                    }
-
                     if (! Survey::checkCode($value)) {
-                        $fail($this->messages['surveyCode.exists']);
+                        $fail(langDatabase('form.validation.code_unknown'));
                     }
                 },
             ],

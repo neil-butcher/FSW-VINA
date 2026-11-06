@@ -27,6 +27,8 @@ class User extends Authenticatable
 {
     protected $table = 'users';
 
+    protected $hidden = ['password', 'remember_token'];
+
     protected $casts = [
         'role_id' => 'int',
         'email_verified_at' => 'datetime',

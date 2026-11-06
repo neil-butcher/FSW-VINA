@@ -7,6 +7,8 @@
 .env
 .env.backup
 .env.production
+.env.runtime
+/.vina-local/
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
